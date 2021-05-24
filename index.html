@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="./public/dist/reveal.css">
+    <link rel="stylesheet" href="./public/dist/theme/black.css">
+    <link rel="stylesheet" href="./public/plugin/highlight/monokai.css">
+    <style>
+      .include-container .include-citation { float: right; text-color: white; font-size: small; }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h1>Exploring Text-Base Protocols</h1>
+          <h3>Joel Berger</h3>
+        </section>
+        <section>
+          <h2>We use really high-level abstractions</h2>
+        </section>
+        <section>
+          <h3>For Example</h3>
+          <ul>
+            <li>
+              Caching provided by
+              <ul>
+                <li>web framework</li>
+                <li>cache abstraction library</li>
+                <li>cache engine language bindings</li>
+              </ul>
+            </li>
+            <li>Chat clients are GUIs</li>
+            <li>Browsers hide the HTML let alone the HTTP</li>
+          </ul>
+        </section>
+        <section>
+          <p>Many of these have</p>
+          <p>
+            <ul>
+              <li>Human-readable(-ish)</li>
+              <li>Simple transmission mechanisms (TCP)</li>
+            </ul>
+          </p>
+        </section>
+        <section>
+          <h4>Transmission Control Protocol (TCP)</h4>
+          <ul>
+            <li>Backbone of web communication</li>
+            <li>Ordered</li>
+            <li>Reliable</li>
+            <li>Error checked</li>
+            <li>Bi-directional</li>
+          </ul>
+        </section>
+        <section>
+          <section>
+            <h2>TCP Clients</h2>
+          </section>
+          <section>
+            <h3>telnet</h3>
+            <ul>
+              <li>venerable client</li>
+              <li>nuisance </li>
+              <li>not always installed anymore</li>
+            </ul>
+            <pre><code class="bash">$ telnet localhost 6379</code></pre>
+          </section>
+          <section>
+            <h3>netcat (nc)</h3>
+            <ul>
+              <li>simple</li>
+              <li>attaches stdin/stdout</li>
+              <li>useful for pipes</li>
+            </ul>
+            <pre><code class="bash">$ echo "..." | nc localhost 11211 | jq .</code></pre>
+          </section>
+          <section>
+            <h3>socat</h3>
+            <ul>
+              <li>like netcat but more features</li>
+              <li>especially useful for ssl</li>
+            </ul>
+            <pre><code class="bash">$ socat - OPENSSL:duckduckgo.com:443 | jq .</code></pre>
+          </section>
+          <pre><code>$ socat </code></pre>
+        </section>
+        <section>
+          <section>
+            <h3>Examples</h3>
+            <ul>
+              <li>Graphite</li>
+              <li>Memcached</li>
+              <li>Redis</li>
+              <li>IRC</li>
+              <li>HTTP</li>
+            </ul>
+          </section>
+          <section>
+            <h3>Included Docker-Compose File</h3>
+            <div data-include="ex/docker-compose.yaml" data-include-lang="yaml"></div>
+          </section>
+        </section>
+      </div>
+    </div>
+    <script type="module">
+      import Reveal from './public/dist/reveal.esm.js';
+      import Highlight from './public/plugin/highlight/highlight.esm.js';
+      import Include from './public/plugin/include.js';
+      Reveal.initialize({
+        hash: true,
+        plugins: [new Include('./public/'), Highlight],
+      });
+    </script>
+  </body>
+</html>
