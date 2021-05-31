@@ -15,24 +15,27 @@
           <h1>Exploring Text-Base Protocols</h1>
           <h3>Joel Berger</h3>
         </section>
+
         <section>
           <h2>We use really high-level abstractions</h2>
         </section>
+
         <section>
           <h3>For Example</h3>
           <ul>
+            <li>Chat clients are GUIs</li>
+            <li>Browsers hide the HTML let alone the HTTP</li>
             <li>
-              Caching provided by
+              Caching layers are provided by
               <ul>
                 <li>web framework</li>
                 <li>cache abstraction library</li>
                 <li>cache engine language bindings</li>
               </ul>
             </li>
-            <li>Chat clients are GUIs</li>
-            <li>Browsers hide the HTML let alone the HTTP</li>
           </ul>
         </section>
+
         <section>
           <p>Many of these have</p>
           <p>
@@ -42,6 +45,7 @@
             </ul>
           </p>
         </section>
+
         <section>
           <h4>Transmission Control Protocol (TCP)</h4>
           <ul>
@@ -50,8 +54,34 @@
             <li>Reliable</li>
             <li>Error checked</li>
             <li>Bi-directional</li>
+            <li>Streams! Not framed!</li>
           </ul>
         </section>
+
+        <section>
+          <h3>When is the message complete?</h3>
+          <ul>
+            <li>when the connection closes</li>
+            <li>end at a known boundary (usually <code>\n</code>)</li>
+            <li>after a pre-agreed number of bytes</li>
+            <li>combination of these</li>
+          </ul>
+        </section>
+
+        <!-- TODO: expand on these cases -->
+
+        <section>
+          <h3>A Note About New Lines</h3>
+          <ul>
+            <li>Some protocols require <code>\n</code> others require <code>\r\n</code></li>
+            <li>Some protocols/servers/clients are more tolerant of the wrong ending than others</li>
+            <li>Check how to send a literal <code>\r</code> using
+              <pre><code class="bash">$ stty -a</pre></code>
+              and looking for <code>lnext</code>. It is <code>^V</code> for me.
+            </li>
+          </ul>
+        </section>
+
         <section>
           <section>
             <h2>TCP Clients</h2>
@@ -60,8 +90,9 @@
             <h3>telnet</h3>
             <ul>
               <li>venerable client</li>
-              <li>nuisance </li>
+              <li>nuisance</li>
               <li>not always installed anymore</li>
+              <li>always sends <code>\r\n</code> line endings</li>
             </ul>
             <pre><code class="bash">$ telnet localhost 6379</code></pre>
           </section>
@@ -71,6 +102,7 @@
               <li>simple</li>
               <li>attaches stdin/stdout</li>
               <li>useful for pipes</li>
+              <li>some versions allow <code>-c</code> to send <code>\r\n</code></li>
             </ul>
             <pre><code class="bash">$ echo "..." | nc localhost 11211 | jq .</code></pre>
           </section>
@@ -80,18 +112,28 @@
               <li>like netcat but more features</li>
               <li>especially useful for ssl</li>
             </ul>
-            <pre><code class="bash">$ socat - OPENSSL:duckduckgo.com:443 | jq .</code></pre>
+            <pre><code class="bash">$ socat - OPENSSL:duckduckgo.com:443</code></pre>
+
+            <p class="fragment"><small>My wife wants you to know that it is "tacos" backwards</small></p>
           </section>
-          <pre><code>$ socat </code></pre>
+          <section>
+            <h3>Others</h3>
+            <ul>
+              <li><pre><code class="bash">$ openssl s_client -connect $HOSTNAME:$PORT</code></pre></li>
+              <li>Most languages have a TCP client available</li>
+              <li>Mojo::IOLoop::Client</li>
+            </ul>
+          </section>
         </section>
+
         <section>
           <section>
             <h3>Examples</h3>
             <ul>
               <li>Graphite</li>
+              <li>IRC</li>
               <li>Memcached</li>
               <li>Redis</li>
-              <li>IRC</li>
               <li>HTTP</li>
             </ul>
           </section>
@@ -100,8 +142,141 @@
             <div data-include="ex/docker-compose.yaml" data-include-lang="yaml"></div>
           </section>
         </section>
+
+        <section>
+          <section>
+            <h2>Sending Data</h2>
+            <p>Example: Graphite</p>
+          </section>
+          <section>
+            <h3>Graphite</h3>
+            <ul>
+              <li>high performance metric collector</li>
+              <li>takes metrics via simple TCP "<a href="https://graphite.readthedocs.io/en/latest/feeding-carbon.html#step-3-understanding-the-graphite-message-format" target="_blank">line protocol</a>"</li>
+              <li>no response</li>
+              <li>visualizations are from another web service</li>
+            </ul>
+          </section>
+          <section>
+            <h3>Graphite Plaintext Format</h3>
+            <pre><code class="plaintext">metric.path.name value timestamp\n</code></pre>
+            <br>
+            <p>Example:</p>
+            <pre><code class="plaintext">wx.temp.chicago 78.2 1621913119\n</code></pre>
+          </section>
+          <section>
+            <h3>Sending Data</h3>
+            <pre><code>$ echo "wx.temp.chicago 78.2 `date +%s`" | nc localhost 2003</code></pre>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>Sending and Receiving Data</h2>
+            <p>Example: IRC</p>
+          </section>
+          <section>
+            <h3>Internet Relay Chat</h3>
+            <ul>
+              <li>venerable chat protocol</li>
+              <li>mostly human readable</li>
+              <li>bi-directional line protocol
+                <ul>
+                  <li>NOT request/response</li>
+                  <li>server sends messages you need</li>
+                </ul>
+              </li>
+              <li>in theory uses <code>\r\n</code> but in practice accepts <code>\n</code></li>
+            </ul>
+          </section>
+          <section>
+            <h3>Message Format</h3>
+            <pre><code class="plaintext">
+              :prefix command arg1 arg2 ... argN\r\n
+            </code></pre>
+            <ul>
+              <li>prefix is optional, not used by clients</li>
+              <li>space-separated arguments (15 max)</li>
+              <li>max message length 512 bytes including ending</li>
+              <li>newlines in arguments are prohibited</li>
+              <li>spaces in args are prohibited, exception
+                <ul><li>trailing argument with a leading <code>:</code></li></ul>
+              </li>
+            </ul>
+          </section>
+          <section>
+            <h3>Connect</h3>
+            <p>IRC is noisy, separate input from output</p>
+            <p>In one terminal do
+              <pre><code class="plaintext">
+                touch irc-out; tail -f irc-out
+              </code></pre>
+            </p>
+            <p>In another terminal do
+              <pre><code class="plaintext"><script type="text/template">
+                nc $SERVER 6667 >irc-out
+                NICK mynickname
+                USER myusername 0 * :Real Name
+              </script></code></pre>
+              You'll see welcome messages in the other terminal
+            </p>
+          </section>
+          <section>
+            <h3>Join a Channel</h3>
+            <p>
+              Send
+              <pre><code class="plaintext">JOIN #test</code></pre>
+            </p>
+            <p>
+              Server Sends ("Replies")
+              <pre><code class="plaintext">:mynickname!myusername@$HOST JOIN #test</code></pre>
+              ... to you and everyone in the channel
+            </p>
+          </section>
+          <section>
+            <h3>Send and Receive Messages</h3>
+            <p>
+              Send a message
+              <pre><code class="plaintext">PRIVMSG #test :Hello World!</code></pre>
+            </p>
+            <p>
+              Server Sends
+              <pre><code class="plaintext">:mynickname!myusername@$HOST PRIVMSG #test :Hello World!</code></pre>
+              ... to everyone else in the channel
+            </p>
+          </section>
+          <section>
+            <h3>Alive Check: PING/PONG</h3>
+            <p>
+              If the server sends you
+              <pre><code class="plaintext">PING :something</code></pre>
+            </p>
+            <p>
+              You need to (rather promptly) reply
+              <pre><code class="plaintext">PONG :something</code></pre>
+              ... or it will drop your connection
+            </p>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>Request and Response</h2>
+            <p>Example: Memcached</p>
+          </section>
+          <section>
+            <h3>Memcached</h3>
+            <ul>
+              <li>in memory cache</li>
+              <li>simple commands for set/get etc</li>
+              <li>line commands with some length-prefixed content</li>
+            </ul>
+          </section>
+        </section>
+
       </div>
     </div>
+
     <script type="module">
       import Reveal from './public/dist/reveal.esm.js';
       import Highlight from './public/plugin/highlight/highlight.esm.js';

@@ -5,6 +5,11 @@ services:
     ports:
       - '8080:80'
       - '2003:2003'
+  irc:
+    image: oragono/oragono:latest
+    ports:
+      - '6667:6667'
+      - '6697:6697'
   memcached:
     image: memcached:latest
     ports:
@@ -13,11 +18,6 @@ services:
     image: redis:latest
     ports: 
       - '6379:6379'
-  irc:
-    image: oragono/oragono:latest
-    ports:
-      - '6667:6667'
-      - '6697:6697'
   http:
     image: ealen/echo-server:latest
     ports:

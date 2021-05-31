@@ -1,7 +1,10 @@
 function cloneAttributes(target, source) {
-  [...source.attributes].forEach( attr => { target.setAttribute(attr.nodeName === "id" ? 'data-id' : attr.nodeName ,attr.nodeValue) })
+  for (const attr of Array.from(source.attributes)) {
+    target.setAttribute(attr.nodeName === "id" ? 'data-id' : attr.nodeName, attr.nodeValue);
+  }
 }
 
+// With inspiration from https://github.com/dafrenchyman/reveal.js-extrernal-code
 export default class Include {
   constructor(path) {
     this.id = 'include';
@@ -65,3 +68,4 @@ export default class Include {
     return Promise.all(elems.map(elem => this.includeFile(elem)));
   };
 }
+
