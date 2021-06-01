@@ -199,9 +199,7 @@
           </section>
           <section>
             <h3>Message Format</h3>
-            <pre><code class="plaintext">
-              :prefix command arg1 arg2 ... argN\r\n
-            </code></pre>
+            <pre><code class="plaintext">:prefix command arg1 arg2 ... argN\r\n</code></pre>
             <ul>
               <li>prefix is optional, not used by clients</li>
               <li>space-separated arguments (15 max)</li>
@@ -219,12 +217,12 @@
             <h3>Connect</h3>
             <p>IRC is noisy, separate input from output</p>
             <p>In one terminal do
-              <pre><code class="plaintext">
+              <pre><code class="plaintext" data-trim>
                 touch irc-out; tail -f irc-out
               </code></pre>
             </p>
             <p>In another terminal do
-              <pre><code class="plaintext"><script type="text/template">
+              <pre><code class="plaintext" data-trim><script type="text/template">
                 nc $SERVER 6667 >irc-out
                 NICK mynickname
                 USER myusername 0 * :Real Name
@@ -337,7 +335,7 @@
           </section>
           <section data-auto-animate>
             <h3>Setting Keys</h3>
-            <h4>The Response</h4>
+            <h4>Server Response</h4>
             <ul>
               <li>If successful
                 <ul><li><code class="plaintext">STORED\r\n</code></pre></li></ul>
@@ -354,7 +352,7 @@
         </section>
 
         <section>
-          <section data-auto-animate>
+          <section data-auto-animate data-auto-animate-restart>
             <h3>Getting Keys</h3>
             <h4>Request One or More Keys</h4>
             <p>
@@ -364,6 +362,21 @@
             <p>
               Multiple keys
               <pre><code class="plaintext">get key1 key2 key3\r\n</code></pre>
+            </p>
+          </section>
+          <section data-auto-animate>
+            <h3>Getting Keys</h3>
+            <h4>Server Response</h4>
+            <p>
+              For each key requested
+              <pre><code class="plaintext" data-trim>
+                VALUE key flags length\r\n
+                payload bytes, correct length\r\n
+              </code></pre>
+            </p>
+            <p>
+              Then finally
+              <pre><code class="plaintext">END\r\n</code></pre>
             </p>
           </section>
         </section>
