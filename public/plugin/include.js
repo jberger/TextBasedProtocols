@@ -1,6 +1,6 @@
 function cloneAttributes(target, source) {
   for (const attr of Array.from(source.attributes)) {
-    target.setAttribute(attr.nodeName === "id" ? 'data-id' : attr.nodeName, attr.nodeValue);
+    target.setAttribute(attr.nodeName === "id" ? 'data-orig-id' : attr.nodeName, attr.nodeValue);
   }
 }
 

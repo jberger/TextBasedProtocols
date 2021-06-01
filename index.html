@@ -141,6 +141,14 @@
             <h3>Included Docker-Compose File</h3>
             <div data-include="ex/docker-compose.yaml" data-include-lang="yaml"></div>
           </section>
+          <section>
+            <h3>Purpose of Examples</h3>
+            <ul>
+              <li>Show different types of protocols</li>
+              <li>Get comfortable using tools and methods</li>
+              <li>Give examples, not details</li>
+            </ul>
+          </section>
         </section>
 
         <section>
@@ -152,7 +160,7 @@
             <h3>Graphite</h3>
             <ul>
               <li>high performance metric collector</li>
-              <li>takes metrics via simple TCP "<a href="https://graphite.readthedocs.io/en/latest/feeding-carbon.html#step-3-understanding-the-graphite-message-format" target="_blank">line protocol</a>"</li>
+              <li>takes metrics via simple TCP "line <a href="https://graphite.readthedocs.io/en/latest/feeding-carbon.html#step-3-understanding-the-graphite-message-format" target="_blank">protocol</a>"</li>
               <li>no response</li>
               <li>visualizations are from another web service</li>
             </ul>
@@ -180,7 +188,7 @@
             <ul>
               <li>venerable chat protocol</li>
               <li>mostly human readable</li>
-              <li>bi-directional line protocol
+              <li>bi-directional line <a href="https://datatracker.ietf.org/doc/html/rfc2812" target="_blank">protocol</a>
                 <ul>
                   <li>NOT request/response</li>
                   <li>server sends messages you need</li>
@@ -204,6 +212,9 @@
               </li>
             </ul>
           </section>
+        </section>
+
+        <section>
           <section>
             <h3>Connect</h3>
             <p>IRC is noisy, separate input from output</p>
@@ -268,9 +279,92 @@
             <h3>Memcached</h3>
             <ul>
               <li>in memory cache</li>
-              <li>simple commands for set/get etc</li>
-              <li>line commands with some length-prefixed content</li>
+              <li>simple commands for set/get etc
+                <ul><li>one response in reply for each request</li></ul>
+              </li>
+              <li>line <a href="https://github.com/memcached/memcached/blob/master/doc/protocol.txt" target="_blank">protocol</a> with some length-prefixed content</li>
+              <li>picky about <code>\r\n</code></li>
             </ul>
+          </section>
+        </section>
+
+        <section>
+          <section data-auto-animate>
+            <h3>Setting Keys</h3>
+            <h4>Step One: Setup the Storage</h4>
+            <p>
+              <pre><code class="plaintext">set key flags expiration length\r\n</code></pre>
+              <ul>
+                <li>set is the command</li>
+                <li>key is name of the key</li>
+                <li>flags ... isn't important, use 0</li>
+              </ul>
+            <p>
+          </section>
+          <section data-auto-animate>
+            <h3>Setting Keys</h3>
+            <h4>Step One: Setup the Storage</h4>
+            <p>
+              <pre><code class="plaintext">set key flags expiration length\r\n</code></pre>
+              <ul>
+                <li>
+                  expiration is
+                  <ul>
+                    <li>zero never expires (by time)</li>
+                    <li>unix timestamp</li>
+                    <li>seconds from now</li>
+                  </ul>
+                </li>
+                <li>length in bytes (not including trailing CRLF)</li>
+              </ul>
+              <pre><code class="plaintext">set greeting 0 0 12\r\n</code></pre>
+          </section>
+          <section data-auto-animate>
+            <h3>Setting Keys</h3>
+            <h4>Step Two: Send the Payload</h4>
+            <p>
+              <pre><code class="plaintext">payload bytes, correct length\r\n</code></pre>
+              <ul>
+                <li>
+                  payload
+                  <ul>
+                    <li>must be length from above</li>
+                    <li>may contain newlines etc.</li>
+                  </ul>
+                </li>
+              </ul>
+              <pre><code class="plaintext">Hello World!\r\n</code></pre>
+          </section>
+          <section data-auto-animate>
+            <h3>Setting Keys</h3>
+            <h4>The Response</h4>
+            <ul>
+              <li>If successful
+                <ul><li><code class="plaintext">STORED\r\n</code></pre></li></ul>
+              </li>
+              <li>Otherwise
+                <ul>
+                  <li><code>ERROR\r\n</code></li>
+                  <li><code>CLIENT_ERROR\r\n</code></li>
+                  <li><code>SERVER_ERROR\r\n</code></li>
+                </ul>
+              </li>
+            </ul>
+          </section>
+        </section>
+
+        <section>
+          <section data-auto-animate>
+            <h3>Getting Keys</h3>
+            <h4>Request One or More Keys</h4>
+            <p>
+              One key
+              <pre><code class="plaintext">get key1\r\n</code></pre>
+            </p>
+            <p>
+              Multiple keys
+              <pre><code class="plaintext">get key1 key2 key3\r\n</code></pre>
+            </p>
           </section>
         </section>
 
