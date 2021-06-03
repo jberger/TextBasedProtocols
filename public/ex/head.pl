@@ -6,5 +6,5 @@ select STDERR;
 
 while (<>) {
   print;
-  select STDOUT if /^\s*$/;
+  select STDOUT if /^\r\n$/;
 }

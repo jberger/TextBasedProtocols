@@ -12,8 +12,13 @@
     <div class="reveal">
       <div class="slides">
         <section>
-          <h1>Exploring Text-Base Protocols</h1>
+          <h1>Exploring Text-Based Protocols</h1>
           <h3>Joel Berger</h3>
+        </section>
+
+        <section>
+          <h3>Source and Materials</h3>
+          <a href=https://github.com/jberger/TextBasedProtocols">https://github.com/jberger/TextBasedProtocols</a>
         </section>
 
         <section>
@@ -42,6 +47,7 @@
             <ul>
               <li>Human-readable(-ish)</li>
               <li>Simple transmission mechanisms (TCP)</li>
+              <li>Useful to know how the abstractions work</li>
             </ul>
           </p>
         </section>
@@ -49,7 +55,7 @@
         <section>
           <h4>Transmission Control Protocol (TCP)</h4>
           <ul>
-            <li>Backbone of web communication</li>
+            <li>Backbone of network communications</li>
             <li>Ordered</li>
             <li>Reliable</li>
             <li>Error checked</li>
@@ -61,8 +67,16 @@
         <section>
           <h3>When is the message complete?</h3>
           <ul>
-            <li>when the connection closes</li>
-            <li>end at a known boundary (usually <code>\n</code>)</li>
+            <li>when the connection closes
+              <ul>
+                <li>expensive</li>
+              </ul>
+            </li>
+            <li>end at a known boundary (usually a newline)
+              <ul>
+                <li>body containing boundary symbol?</li>
+              </ul>
+            </li>
             <li>after a pre-agreed number of bytes</li>
             <li>combination of these</li>
           </ul>
@@ -111,6 +125,12 @@
             <ul>
               <li>like netcat but more features</li>
               <li>especially useful for ssl</li>
+              <li>add options to each direction joined with commas
+                <ul>
+                  <li>crlf</li>
+                  <li>verify=0</li>
+                </ul>
+              </li>
             </ul>
             <pre><code class="bash">$ socat - OPENSSL:duckduckgo.com:443</code></pre>
 
@@ -163,6 +183,7 @@
               <li>takes metrics via simple TCP "line <a href="https://graphite.readthedocs.io/en/latest/feeding-carbon.html#step-3-understanding-the-graphite-message-format" target="_blank">protocol</a>"</li>
               <li>no response</li>
               <li>visualizations are from another web service</li>
+              <li>uses <code>\n</code> line endings</li>
             </ul>
           </section>
           <section>
@@ -194,7 +215,7 @@
                   <li>server sends messages you need</li>
                 </ul>
               </li>
-              <li>in theory uses <code>\r\n</code> but in practice accepts <code>\n</code></li>
+              <li>technically <code>\r\n</code>, most servers accept <code>\n</code></li>
             </ul>
           </section>
           <section>
@@ -381,6 +402,117 @@
           </section>
         </section>
 
+        <section>
+          <section>
+            <h2>The Big One</h2>
+            <p>Example: HTTP</p>
+          </section>
+          <section>
+            <h3>HTTP</h3>
+            <ul>
+              <li>complex <a href="https://httpwg.org/specs/rfc7230.html" target="_blank">protocol</a></li>
+              <li>both parse and behavior depend on many factors</li>
+              <li>technically <code>\r\n</code>, most servers accept <code>\n</code></li>
+              <li>this is not HTML, content can be anything/nothing</li>
+            </ul>
+          </section>
+          <section>
+            <h3>HTTP Message</h3>
+            <ul>
+              <li>Start line</li>
+              <li>Headers</li>
+              <li>Optional body</li>
+            </ul>
+          </section>
+          <section>
+            <h3>HTTP Start Line</h3>
+            <h4>Request</h4>
+            <p>
+              <pre><code class="plaintext">METHOD PATH HTTP/VERSION\r\n</code></pre>
+              Example:
+              <pre><code class="plaintext">GET / HTTP/1.1\r\n</code></pre>
+            </p>
+            <h4>Response</h4>
+            <p>
+              <pre><code class="plaintext">HTTP/VERSION STATUS MESSAGE\r\n</code></pre>
+              Example:
+              <pre><code class="plaintext">HTTP/1.1 200 OK\r\n</code></pre>
+            </p>
+          </section>
+          <section>
+            <h3>HTTP Headers</h3>
+            <ul>
+              <li>key-value pairs
+                <ul>
+                  <li>keys and values are colon separated</li>
+                  <li>pair ends in <code>\r\n</code></li>
+                </ul>
+              </li>
+              <li>keys are case insensitive</li>
+              <li>value may be very complex</li>
+              <li>headers end with empty line ending in <code>\r\n</code></li>
+            </ul>
+          </section>
+          <section>
+            <h3>Request Host Header</h3>
+            <ul>
+              <li>Optional in HTTP/1.0</li>
+              <li>Technically required in HTTP/1.1</li>
+              <li>Actually required for name-based virtual hosting</li>
+              <li>Used with the start line path for absolute urls</li>
+            </ul>
+          </section>
+          <section>
+            <h3>Other Useful Headers</h3>
+            <ul>
+              <li><code>Content-Type</code> ➡ body file type</li>
+              <li><code>Content-Disposition</code> ➡ other body info:
+                <ul>
+                  <li>filename</li>
+                  <li>display inline or download</li>
+                </ul>
+              </li>
+              <li><code>Accept</code> ➡ requested file type</li>
+              <li><code>Accept-Encoding</code> ➡ requested compression</li>
+              <li><code>Cookie</code> and <code>Set-Cookie</code></li>
+              <li>various caching headers</li>
+            </ul>
+          </section>
+          <section>
+            <h3>HTTP Message Body (?)</h3>
+            <ul>
+              <li>only on some directions/methods/status codes</li>
+              <li>complete when
+                <ul>
+                  <li>connection closed
+                    <ul>
+                      <li>HTTP/1.0</li>
+                      <li><code>Connection: close</code></li>
+                    </ul>
+                  </li>
+                  <li>after <code>Content-Length</code> bytes and <code>\r\n</code></li>
+                  <li>via <code>Transfer-Encoding: chunked</code></li>
+                </ul>
+              </ul>
+          </section>
+        </section>
+
+        <section>
+          <h3>See Also</h3>
+          <ul>
+            <li><a href="https://redis.io/topics/protocol">Redis Protocol</a></li>
+            <li><a href="https://guacamole.apache.org/doc/gug/guacamole-protocol.html">Guacamole Protocol</a>
+              <ul>
+                <li><a href="https://github.com/jberger/GuacLite">GuacLite Client</a></li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Conclusion</h3>
+          <p>Go play with text-based protocols!</p>
+        </section>
       </div>
     </div>
 
