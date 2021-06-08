@@ -59,15 +59,28 @@
         </section>
 
         <section>
-          <h4>Transmission Control Protocol (TCP)</h4>
-          <ul>
-            <li>Backbone of network communications</li>
-            <li>Ordered</li>
-            <li>Reliable</li>
-            <li>Error checked</li>
-            <li>Bi-directional</li>
-            <li>Streams! Not framed!</li>
-          </ul>
+          <section>
+            <h4>Transmission Control Protocol (TCP)</h4>
+            <ul>
+              <li>Backbone of network communications</li>
+              <li>Ordered</li>
+              <li>Reliable</li>
+              <li>Error checked</li>
+              <li>Bi-directional</li>
+            </ul>
+          </section>
+          <section>
+            <h3>Streams! Not Framed!</h3>
+            <ul>
+              <li>Send bytes</li>
+              <li>Read bytes
+                <ul>
+                  <li>Message may not be complete</li>
+                </ul>
+              </li>
+              <li>Note: WebSocket <em>IS</em> framed</li>
+            </ul>
+          </section>
         </section>
 
         <section>
@@ -87,8 +100,6 @@
             <li>combination of these</li>
           </ul>
         </section>
-
-        <!-- TODO: expand on these cases -->
 
         <section>
           <h3>A Note About New Lines</h3>
