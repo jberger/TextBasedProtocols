@@ -14,11 +14,11 @@ services:
     image: memcached:latest
     ports:
       - '11211:11211'
-  redis:
-    image: redis:latest
-    ports: 
-      - '6379:6379'
   http:
     image: ealen/echo-server:latest
     ports:
       - '8081:80'
+  redis:
+    image: redis:latest
+    ports: 
+      - '6379:6379'
