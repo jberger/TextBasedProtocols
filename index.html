@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="./public/dist/reveal.css">
-    <link rel="stylesheet" href="./public/dist/theme/black.css">
-    <link rel="stylesheet" href="./public/plugin/highlight/monokai.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.1/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.1/dist/theme/black.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.1/plugin/highlight/monokai.css">
     <style>
       .include-container .include-citation { float: right; text-color: white; font-size: small; }
     </style>
@@ -517,12 +517,12 @@
     </div>
 
     <script type="module">
-      import Reveal from './public/dist/reveal.esm.js';
-      import Highlight from './public/plugin/highlight/highlight.esm.js';
-      import Include from './public/plugin/include.js';
+      import Reveal from 'https://cdn.jsdelivr.net/npm/reveal.js@4.1.1/dist/reveal.esm.js';
+      import Highlight from 'https://cdn.jsdelivr.net/npm/reveal.js@4.1.1/plugin/highlight/highlight.esm.js';
+      import Include from './plugin/include.js';
       Reveal.initialize({
         hash: true,
-        plugins: [new Include('./public/'), Highlight],
+        plugins: [new Include('./'), Highlight],
       });
     </script>
   </body>
