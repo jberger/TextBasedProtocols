@@ -157,7 +157,7 @@
             <h3>Examples</h3>
             <ul>
               <li>Graphite</li>
-              <li>IRC</li>
+              <li class="fragment highlight-red">IRC</li>
               <li>Memcached</li>
               <li>HTTP</li>
               <li>Redis <span class="fragment">(cut for time)</span></li>
@@ -258,6 +258,18 @@
             </p>
           </section>
           <section>
+            <h3>Alive Check: PING/PONG</h3>
+            <p>
+              If the server sends you
+              <pre><code class="plaintext">PING :something</code></pre>
+            </p>
+            <p>
+              You need to (rather promptly) reply
+              <pre><code class="plaintext">PONG :something</code></pre>
+              ... or it will drop your connection
+            </p>
+          </section>
+          <section>
             <h3>Join a Channel</h3>
             <p>
               Send
@@ -279,18 +291,6 @@
               Server Sends
               <pre><code class="plaintext">:mynickname!myusername@$HOST PRIVMSG #test :Hello World!</code></pre>
               ... to everyone else in the channel
-            </p>
-          </section>
-          <section>
-            <h3>Alive Check: PING/PONG</h3>
-            <p>
-              If the server sends you
-              <pre><code class="plaintext">PING :something</code></pre>
-            </p>
-            <p>
-              You need to (rather promptly) reply
-              <pre><code class="plaintext">PONG :something</code></pre>
-              ... or it will drop your connection
             </p>
           </section>
         </section>
@@ -468,7 +468,7 @@
               <li>Used with the start line path for absolute urls</li>
             </ul>
           </section>
-          <section>
+          <!--section>
             <h3>Other Useful Headers</h3>
             <ul>
               <li><code>Content-Type</code> ➡ body file type</li>
@@ -483,7 +483,7 @@
               <li><code>Cookie</code> and <code>Set-Cookie</code></li>
               <li>various caching headers</li>
             </ul>
-          </section>
+          </section-->
           <section>
             <h3>HTTP Message Body (?)</h3>
             <ul>
