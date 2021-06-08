@@ -525,10 +525,11 @@
     <script type="module">
       import Reveal from 'https://cdn.jsdelivr.net/npm/reveal.js@4.1.1/dist/reveal.esm.js';
       import Highlight from 'https://cdn.jsdelivr.net/npm/reveal.js@4.1.1/plugin/highlight/highlight.esm.js';
+      import Notes from 'https://cdn.jsdelivr.net/npm/reveal.js@4.1.1/plugin/notes/notes.esm.js';
       import Include from './plugin/include.js';
       Reveal.initialize({
         hash: true,
-        plugins: [new Include('./'), Highlight],
+        plugins: [new Include('./'), Highlight, Notes],
       });
     </script>
   </body>
