@@ -48,11 +48,11 @@
         </section>
 
         <section>
-          <p>Many of these have</p>
+          <h3>Many of these ...</h3>
           <p>
             <ul>
-              <li>Human-readable(-ish)</li>
-              <li>Simple transmission mechanisms (TCP)</li>
+              <li>Are human-readable(-ish)</li>
+              <li>Use simple transmission mechanisms (TCP)</li>
               <li>Useful to know how the abstractions work</li>
             </ul>
           </p>
@@ -122,9 +122,9 @@
               <li>simple</li>
               <li>attaches stdin/stdout</li>
               <li>useful for pipes</li>
-              <li>some versions allow <code>-c</code> to send <code>\r\n</code></li>
+              <li>some versions allow <code>-c</code> or <code>-C</code> to send <code>\r\n</code></li>
             </ul>
-            <pre><code class="bash">$ echo "..." | nc localhost 11211 | jq .</code></pre>
+            <pre><code class="bash">$ echo "get foo" | nc -C localhost 11211 &gt; output.txt </code></pre>
           </section>
           <section>
             <h3>socat</h3>
@@ -145,7 +145,7 @@
           <section>
             <h3>Others</h3>
             <ul>
-              <li><pre><code class="bash">$ openssl s_client -connect $HOSTNAME:$PORT</code></pre></li>
+              <li><pre><code class="bash">$ openssl s_client -connect www.google.com:443</code></pre></li>
               <li>Most languages have a TCP client available</li>
               <li>Mojo::IOLoop::Client</li>
             </ul>
